@@ -1,5 +1,45 @@
 require "io/console"
 
+class Player
+  attr_accessor :advance
+  attr_reader   :name
+
+  def initialize(name)
+    @name = name
+  end
+
+  @advance
+end
+
+def sugoroku_main
+  puts "何人でプレイしますか？"
+
+  players_num = gets.chomp.to_i
+  players = []
+
+  sugoroku_entry(players, players_num)
+  sugoroku_play(players, players_num)
+end
+
+def sugoroku_entry(players, players_num)
+  ii = 0
+  while ii < players_num
+    puts "#{ii+1}人目の名前を入力してください。"
+    players << Player.new(gets.chomp)
+    ii += 1
+  end
+end
+
+def sugoroku_play(players, players_num)
+  ii = 0
+  while ii < players_num
+    puts players[ii].name
+    ii += 1
+  end
+end
+
+sugoroku_main
+
 puts "サイコロを6回振ってください。"
 puts "20マス進めばあなたの勝ちです！"
 
