@@ -1,74 +1,97 @@
 require "io/console"
 
 class Player
-  attr_accessor :advance
-  attr_reader   :name
+  attr_accessor :position, :rank
+  attr_reader   :id, :name, goal
 
-  def initialize(name)
+  def initialize(id, name)
+    @id = id
     @name = name
+    @position = 0
+    @rank = 0
+    @goal = false
   end
-
-  @advance
 end
 
+#すごろくのメイン関数
 def sugoroku_main
-  puts "何人でプレイしますか？"
-
-  players_num = gets.chomp.to_i
   players = []
 
-  sugoroku_entry(players, players_num)
-  sugoroku_play(players, players_num)
+  sugoroku_entry(players)
+
+  turn = 0
+  while turn < 6
+    sugoroku_play(players, turn)
+    turn += 1
+    sugoroku_ranking(players)
+  end
+
 end
 
-def sugoroku_entry(players, players_num)
-  ii = 0
-  while ii < players_num
-    puts "#{ii+1}人目の名前を入力してください。"
-    players << Player.new(gets.chomp)
+#すごろくプレイヤーの登録関数
+def sugoroku_entry(players)
+  puts "何人でプレイしますか？"
+  players_num = gets.chomp.to_i
+
+  ii = 1
+  while ii <= players_num
+    puts "#{ii}人目の名前を入力してください。"
+    players << Player.new(ii, gets.chomp)
     ii += 1
   end
 end
 
-def sugoroku_play(players, players_num)
+#すごろくプレイ関数
+def sugoroku_play(players, turn)
   ii = 0
-  while ii < players_num
-    puts players[ii].name
+
+  while ii < players.size && players[ii].rank == 0
+    puts "\n#{players[ii].name}さんの#{turn+1}ターン目です。\nサイコロを振ってください！"
+
+    STDIN.getch
+    dice = rand(1..6)
+    players[ii].position += dice
+
+    puts "#{dice}が出ました！\n現在#{players[ii].position}マス目です。"
+
+    ii += 1
+
+  end
+end
+
+def sugoroku_ranking(players)
+  ii = 1
+  rank = 1
+  goal_position = 20
+  goal_players = []
+
+  while ii <= players.size
+    if players[ii].position >= goal_position
+      goal_players << players[ii]
+      goal_players.rank = rank
+      puts "#{goal_players.[ii].name}さんが、#{goal_players.rank}位でゴールしました！"
+      rank += 1
+    end
     ii += 1
   end
+  #ゴールした順にインスタンス変数rankに順位を格納する
+  #ゴールしたプレイヤーの順位を表示する
+
+
+  #ゴールに到達していないプレイヤーの位置を比較して順位をランキング配列に格納する
+  #ゴールしていないプレイヤーの順位を表示する
+
+
+
+  while ii < players.size
+
+  if players[ii].position >=20
+    rank += 1
+    players[ii].rank = rank
+    puts"ゴールしました！あなたの順位は#{players[ii].rank}着です。"
+  end
+
+  puts"現在、#{players[ii].name}さんが#{ii}位です。"
 end
 
 sugoroku_main
-
-puts "サイコロを6回振ってください。"
-puts "20マス進めばあなたの勝ちです！"
-
-progress = 0
-
-6.times { |n|
-  STDIN.getch
-
-  dice = rand(1..6)
-  progress += dice
-
-  puts "\n#{dice}が出ました！"
-
-  if progress <= 5
-    puts "現在は#{progress}マス目です。頑張って進みましょう！"
-  elsif 5 < progress && progress <= 10
-    puts "現在は#{progress}マス目です。まだまだ序盤です！"
-  elsif 10 < progress && progress <= 15
-    puts "現在は#{progress}マス目です。中間地点を超えました！"
-  elsif 15 < progress && progress < 20
-    puts "現在は#{progress}マス目です。ゴールが見えてきました！"
-  else
-    puts "ゴールです！ おめでとうございます！"
-    puts "\nあなたがサイコロを振った回数は#{n+1}回です。"
-    break
-  end
-
-  if n == 5 && progress <20
-    puts "\n残念ですが、ゴール出来ませんでした。次回は頑張りましょう！"
-  end
-}
-
