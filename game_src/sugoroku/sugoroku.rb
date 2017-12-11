@@ -20,13 +20,12 @@ class SugorokuPlayer
 end
 
 class PlayerList
-  attr_reader :players, :player_num#, :iterator
+  attr_reader :players, :player_num
 
   def initialize
     @players = []
     puts "何人でプレイしますか？"
     @player_num = gets.chomp.to_i
-    #@iterator = PlayerListIterator.new(self)
   end
 
   def naming
@@ -36,27 +35,6 @@ class PlayerList
       @players << SugorokuPlayer.new(gets.chomp)
       ii += 1
     end
-  end
-end
-
-class PlayerListIterator
-  def initialize(players)
-    @players = players
-    @index = 0
-  end
-
-  def hasNext?
-    if (@index < @players.player_num)
-      true
-    else
-      false
-    end
-  end
-
-  def next
-    player = @players.players[@index]
-    @index += 1
-    player
   end
 end
 
@@ -80,10 +58,7 @@ class Sugoroku_main
   end
 
   def play
-    #it = @players.iterator
-    it = PlayerListIterator.new(@players)
-    while it.hasNext?
-      player = it.next
+    @players.players.each do |player|
       puts "\n#{player.name}さんの番です。\nサイコロを振ってください！"
       STDIN.getch
       player.play
@@ -92,9 +67,7 @@ class Sugoroku_main
   end
 
   def goal_judge?
-    #it = @players.iterator
-    while it.hasNext?
-      player = it.next
+    @players.players.each do |player|
       if (player.position >= 20)
         player.goal = true
       end
