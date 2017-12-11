@@ -1,90 +1,59 @@
-require "io/console"
-
 class Player
-  attr_accessor :position, :rank
-  attr_reader   :name, :goal, :goal_turn
+  attr_accessor :rank
+  attr_reader :name
 
   def initialize(name)
     @name = name
-    @dice = 0
     @position = 0
-    @goal = false
-    @goal_turn = 0
-    @rank = 1
+    @rank = 0
   end
 
-  def roll(turn)
-    STDIN.getch
-    @dice = rand(1..6)
-    @position += @dice
-    if @position >= 20
-      puts "おめでとうございます！ #{@name}さんがゴールしました！"
-      @goal = true
-      @goal_turn = turn
-    else
-      puts "#{@dice}が出ました！\n現在#{@position}マス目です。"
-    end
+  def play
+    dice = Dice.new(6)
+    @position += dice.roll
   end
 end
 
-#すごろくのメインメソッド
-def sugoroku_main
-  players = []
+class Dice
+  attr_reader :sides
 
-  sugoroku_entry(players)
+  def initialize(sides)
+    @sides = Range.new(1, sides)
+  end
 
-  sugoroku_play(players)
-
-end
-
-#すごろくプレイヤーの登録メソッド
-def sugoroku_entry(players)
-  puts "何人でプレイしますか？"
-  players_num = gets.chomp.to_i
-
-  ii = 1
-  while ii <= players_num
-    puts "#{ii}人目の名前を入力してください。"
-    players << Player.new(gets.chomp)
-    ii += 1
+  def roll
+    rand(@sides)
   end
 end
 
-#すごろくプレイメソッド
-def sugoroku_play(players)
-  turn = 1
-  while true
+class PlayerList
+  attr_reader :players
+
+  def initialize
+    puts "何人でプレイしますか？"
+    @player_num = gets.chomp.to_i
+    @players = []
     ii = 0
-    while ii < players.size && players[ii].goal == false
-      puts "\n#{players[ii].name}さんの#{turn}ターン目です。\nサイコロを振ってください！"
 
-      players[ii].roll(turn)
+    while ii < @player_num
+      puts "#{ii}人目の名前を入力してください。"
+      @players << Player.new(gets.chomp)
       ii += 1
     end
-    turn +=1
-    game_end = players.inject(true){|result, goal| result && goal}
-    break if game_end == true
+  end
+
+  def ranking
   end
 end
 
-def sugoroku_rank(players)
-  ii = 0
-  jj = 0
-  kk = 0
-  while ii < players.size
-    jj = ii + 1
-    while jj < players.size
-      if players[ii].goal_turn > players[jj].goal_turn
-        players[ii].rank += 1
-      elsif players[ii].goal_turn < players[jj].goal_turn
-        players[jj].rank += 1
-      end
-    end
-  end
+class Display
+  def at_present(Player)
 
-  while kk < players.size
-    puts "#{players[kk].name}, #{players[kk].rank}"
   end
 end
 
-sugoroku_main
+class Main
+  def initialize
+    
+  end
+end
