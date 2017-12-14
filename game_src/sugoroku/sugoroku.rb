@@ -79,30 +79,30 @@ class Sugoroku
 end
 
 class Ranking
-  def make_goal_player_ranking(players)
-    players.each do |player|
+  def make_goaled_player_ranking(goaled_players)
+    goaled_players.each do |player|
       if player
         player.rank = 1
-        players.each do |compare_player|
+        goaled_players.each do |compare_player|
           if player.goal_turn > compare_player.goal_turn
             player.rank += 1
           end
         end
       end
     end
-    players.sort_by!{|player| player.rank}
+    goaled_players.sort_by!{|player| player.rank}
   end
 
-  def make_not_goal_player_ranking(players, goaled_players_size)
-    players.each do |player|
+  def make_not_goaled_player_ranking(not_goaled_players, goaled_players_size)
+    not_goaled_players.each do |player|
       player.rank = goaled_players_size + 1
-      players.each do |compare_player|
+      not_goaled_players.each do |compare_player|
         if player.position < compare_player.position
           player.rank += 1
         end
       end
     end
-    players.sort_by!{|player| player.rank}
+    not_goaled_players.sort_by!{|player| player.rank}
   end
 
   def display_ranking(goaled_players, not_goaled_players)
