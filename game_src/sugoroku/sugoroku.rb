@@ -1,54 +1,36 @@
 require "io/console"
 
 class SugorokuPlayer
-  attr_accessor :position, :rank, :goal
+  attr_accessor :position, :goal_turn, :goal, :rank
   attr_reader :name
 
   def initialize(name)
     @name = name
     @position = 0
-    @rank = 0
+    @goal_turn = 0
     @goal = false
+    @rank = 0
   end
 end
 
 class Dice
-  attr_reader :outcome
-
   def initialize(sides)
     @sides = Range.new(1, sides)
-    @outcome = 0
   end
 
   def roll
-    @outcome = rand(@sides)
-  end
-end
-
-class Ranking
-  def initialize
-    @ranking = []
-  end
-  def make_ranking(players)
-    @ranking = players.sort_by{|player| player.position}.reverse
-    @ranking.each_with_index{|player, idx| player.rank = idx + 1}
-  end
-  def display_ranking
-    ii = 0
-    while ii < @ranking.size
-      puts "現在#{@ranking[ii].rank}位は、#{@ranking[ii].name}さんです。"
-      ii += 1
-    end
+    outcome = rand(@sides)
   end
 end
 
 class Sugoroku
-  attr_accessor :players
+  attr_accessor :players, :turn
+  attr_reader :goaled_players, :not_goaled_players
 
   def initialize
     @dice = Dice.new(6)
     @rank = 1
-    @ranking = []
+    @turn = 1
   end
 
   def entry
@@ -69,32 +51,83 @@ class Sugoroku
       unless player.goal
         puts "\n#{player.name}さんの番です。\nサイコロを振ってください！"
         STDIN.getch
-        @outcome = @dice.roll
-        player.position += @outcome
-        puts "\n#{@outcome}が出ました！ #{player.name}さんは、現在#{player.position}マス目です"
+        outcome = @dice.roll
+        player.position += outcome
+        puts "\n#{outcome}が出ました！ #{player.name}さんは、現在#{player.position}マス目です"
       end
     end
   end
 
-  def finished?
+  def check_each_players_goaled
     @players.each do |player|
       if (player.goal == false)&&(player.position >= 20)
         player.goal = true
+        player.goal_turn = @turn
       end
     end
   end
 
-  def everybody_finished?
-    game_over = false
+  def screening_goaled_players
+    @goaled_players = @players.select {|player| player.goal == true}
+    @not_goaled_players = @players.select {|player| player.goal == false}
+  end
+
+  def everybody_goaled?
+    game_over = true
     game_over = @players.inject(true){|result, player| result && player.goal}
+  end
+end
+
+class Ranking
+  def make_goal_player_ranking(players)
+    players.each do |player|
+      if player
+        player.rank = 1
+        players.each do |compare_player|
+          if player.goal_turn > compare_player.goal_turn
+            player.rank += 1
+          end
+        end
+      end
+    end
+    players.sort_by!{|player| player.rank}
+  end
+
+  def make_not_goal_player_ranking(players, goaled_players_size)
+    players.each do |player|
+      player.rank = goaled_players_size + 1
+      players.each do |compare_player|
+        if player.position < compare_player.position
+          player.rank += 1
+        end
+      end
+    end
+    players.sort_by!{|player| player.rank}
+  end
+
+  def display_ranking(goaled_players, not_goaled_players)
+    ii = 0
+    while ii < goaled_players.size
+      puts "#{goaled_players[ii].rank}位でゴールしたのは、#{goaled_players[ii].name}さんです。"
+      ii += 1
+    end
+    jj = 0
+    while jj < not_goaled_players.size
+      puts "現在#{not_goaled_players[jj].rank}位は、#{not_goaled_players[jj].name}さんです。"
+      jj += 1
+    end
   end
 end
 
 sugoroku = Sugoroku.new
 ranking = Ranking.new
 sugoroku.entry
-until sugoroku.everybody_finished?
+until sugoroku.everybody_goaled?
   sugoroku.play
-  ranking.make_ranking(sugoroku.players)
-  ranking.display_ranking
+  sugoroku.check_each_players_goaled
+  sugoroku.screening_goaled_players
+  ranking.make_goal_player_ranking(sugoroku.goaled_players)
+  ranking.make_not_goal_player_ranking(sugoroku.not_goaled_players, sugoroku.goaled_players.size)
+  ranking.display_ranking(sugoroku.goaled_players, sugoroku.not_goaled_players)
+  sugoroku.turn += 1
 end
