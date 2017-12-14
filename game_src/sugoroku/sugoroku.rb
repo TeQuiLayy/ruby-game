@@ -126,8 +126,8 @@ until sugoroku.everybody_goaled?
   sugoroku.play
   sugoroku.check_each_players_goaled
   sugoroku.screening_goaled_players
-  ranking.make_goal_player_ranking(sugoroku.goaled_players)
-  ranking.make_not_goal_player_ranking(sugoroku.not_goaled_players, sugoroku.goaled_players.size)
+  ranking.make_goaled_player_ranking(sugoroku.goaled_players)
+  ranking.make_not_goaled_player_ranking(sugoroku.not_goaled_players, sugoroku.goaled_players.size)
   ranking.display_ranking(sugoroku.goaled_players, sugoroku.not_goaled_players)
   sugoroku.turn += 1
 end
