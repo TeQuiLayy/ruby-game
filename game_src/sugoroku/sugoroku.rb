@@ -1,14 +1,14 @@
 require "io/console"
 
 class SugorokuPlayer
-  attr_accessor :position, :goal_turn, :goal, :rank
+  attr_accessor :position, :finish_turn, :finish_flg, :rank
   attr_reader :name
 
   def initialize(name)
     @name = name
     @position = 0
-    @goal_turn = 0
-    @goal = false
+    @finish_turn = 0
+    @finish_flg = false
     @rank = 0
   end
 end
@@ -25,7 +25,7 @@ end
 
 class Sugoroku
   attr_accessor :players, :turn
-  attr_reader :goaled_players, :not_goaled_players
+  attr_reader :finished_players, :not_finished_players
 
   def initialize
     @dice = Dice.new(6)
@@ -54,7 +54,7 @@ class Sugoroku
 
   def play
     @players.each do |player|
-      unless player.goal
+      unless player.finish_flg
         puts "\n#{player.name}さんの番です。\nサイコロを振ってください！"
         STDIN.getch
         outcome = @dice.roll
@@ -64,62 +64,62 @@ class Sugoroku
     end
   end
 
-  def check_each_players_goaled
+  def check_each_players_finished
     @players.each do |player|
-      if (player.goal == false)&&(player.position >= 20)
-        player.goal = true
-        player.goal_turn = @turn
+      if (player.finish_flg == false)&&(player.position >= 20)
+        player.finish_flg = true
+        player.finish_turn = @turn
       end
     end
   end
 
-  def screening_goaled_players
-    @goaled_players = @players.select {|player| player.goal == true}
-    @not_goaled_players = @players.select {|player| player.goal == false}
+  def screening_finished_players
+    @finished_players = @players.select {|player| player.finish_flg == true}
+    @not_finished_players = @players.select {|player| player.finish_flg == false}
   end
 
-  def everybody_goaled?
+  def everybody_finished?
     game_over = true
-    game_over = @players.inject(true){|result, player| result && player.goal}
+    game_over = @players.inject(true){|result, player| result && player.finish_flg}
   end
 end
 
 class Ranking
-  def make_goaled_player_ranking(goaled_players)
-    goaled_players.each do |player|
+  def make_finished_player_ranking(finished_players)
+    finished_players.each do |player|
       if player
         player.rank = 1
-        goaled_players.each do |compare_player|
-          if player.goal_turn > compare_player.goal_turn
+        finished_players.each do |compare_player|
+          if player.finish_turn > compare_player.finish_turn
             player.rank += 1
           end
         end
       end
     end
-    goaled_players.sort_by!{|player| player.rank}
+    finished_players.sort_by!{|player| player.rank}
   end
 
-  def make_not_goaled_player_ranking(not_goaled_players, goaled_players_size)
-    not_goaled_players.each do |player|
-      player.rank = goaled_players_size + 1
-      not_goaled_players.each do |compare_player|
+  def make_not_finished_player_ranking(not_finished_players, finished_players_size)
+    not_finished_players.each do |player|
+      player.rank = finished_players_size + 1
+      not_finished_players.each do |compare_player|
         if player.position < compare_player.position
           player.rank += 1
         end
       end
     end
-    not_goaled_players.sort_by!{|player| player.rank}
+    not_finished_players.sort_by!{|player| player.rank}
   end
 
-  def display_ranking(goaled_players, not_goaled_players)
+  def display_ranking(finished_players, not_finished_players)
     ii = 0
-    while ii < goaled_players.size
-      puts "#{goaled_players[ii].rank}位でゴールしたのは、#{goaled_players[ii].name}さんです。"
+    while ii < finished_players.size
+      puts "#{finished_players[ii].rank}位でゴールしたのは、#{finished_players[ii].name}さんです。"
       ii += 1
     end
     jj = 0
-    while jj < not_goaled_players.size
-      puts "現在#{not_goaled_players[jj].rank}位は、#{not_goaled_players[jj].name}さんです。"
+    while jj < not_finished_players.size
+      puts "現在#{not_finished_players[jj].rank}位は、#{not_finished_players[jj].name}さんです。"
       jj += 1
     end
   end
@@ -129,12 +129,12 @@ sugoroku = Sugoroku.new
 ranking = Ranking.new
 sugoroku.player_count
 sugoroku.entry
-until sugoroku.everybody_goaled?
+until sugoroku.everybody_finished?
   sugoroku.play
-  sugoroku.check_each_players_goaled
-  sugoroku.screening_goaled_players
-  ranking.make_goaled_player_ranking(sugoroku.goaled_players)
-  ranking.make_not_goaled_player_ranking(sugoroku.not_goaled_players, sugoroku.goaled_players.size)
-  ranking.display_ranking(sugoroku.goaled_players, sugoroku.not_goaled_players)
+  sugoroku.check_each_players_finished
+  sugoroku.screening_finished_players
+  ranking.make_finished_player_ranking(sugoroku.finished_players)
+  ranking.make_not_finished_player_ranking(sugoroku.not_finished_players, sugoroku.finished_players.size)
+  ranking.display_ranking(sugoroku.finished_players, sugoroku.not_finished_players)
   sugoroku.turn += 1
 end
