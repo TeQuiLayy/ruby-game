@@ -37,7 +37,7 @@ class Sugoroku
     puts "何人でプレイしますか？"
     loop do
       @player_num = gets.chomp.to_i
-      break if @player_num.to_s =~ /^[+-]?[0-9]+$/ && @player_num.between?(1, 4)
+      break if @player_num.to_s =~ /^[1-4]+$/
       puts "1〜4の半角数字を入力してください。"
     end
   end
