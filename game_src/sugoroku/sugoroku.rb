@@ -33,13 +33,19 @@ class Sugoroku
     @turn = 1
   end
 
-  def entry
+  def player_count
     @players = []
     puts "何人でプレイしますか？"
-    player_num = gets.chomp.to_i
+    loop do
+      @player_num = gets.chomp.to_i
+      break if @player_num.to_s =~ /^[+-]?[0-9]+$/ && @player_num.between?(1, 4)
+      puts "1〜4の半角数字を入力してください。"
+    end
+  end
 
+  def entry
     ii = 1
-    while ii <= player_num
+    while ii <= @player_num
       puts "#{ii}人目の名前を入力してください。"
       @players << SugorokuPlayer.new(gets.chomp)
       ii += 1
@@ -121,6 +127,7 @@ end
 
 sugoroku = Sugoroku.new
 ranking = Ranking.new
+sugoroku.player_count
 sugoroku.entry
 until sugoroku.everybody_goaled?
   sugoroku.play
