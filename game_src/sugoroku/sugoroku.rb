@@ -29,7 +29,6 @@ class Sugoroku
 
   def initialize
     @dice = Dice.new(6)
-    @rank = 1
     @turn = 1
   end
 
