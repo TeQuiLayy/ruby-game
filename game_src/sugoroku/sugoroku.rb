@@ -25,7 +25,7 @@ end
 
 class Sugoroku
   attr_accessor :players, :turn
-  attr_reader :finished_players, :not_finished_players
+  attr_reader :finished_players, :unfinished_players
 
   def initialize
     @dice = Dice.new(6)
@@ -74,7 +74,7 @@ class Sugoroku
 
   def screening_finished_players
     @finished_players = @players.select {|player| player.finish_flg == true}
-    @not_finished_players = @players.select {|player| player.finish_flg == false}
+    @unfinished_players = @players.select {|player| player.finish_flg == false}
   end
 
   def everybody_finished?
@@ -84,7 +84,7 @@ class Sugoroku
 end
 
 class Ranking
-  def make_finished_player_ranking(finished_players)
+  def make_ranking_of_finished_player(finished_players)
     finished_players.each do |player|
       if player
         player.rank = 1
@@ -98,27 +98,27 @@ class Ranking
     finished_players.sort_by!{|player| player.rank}
   end
 
-  def make_not_finished_player_ranking(not_finished_players, finished_players_size)
-    not_finished_players.each do |player|
+  def make_ranking_of_unfinished_player(unfinished_players, finished_players_size)
+    unfinished_players.each do |player|
       player.rank = finished_players_size + 1
-      not_finished_players.each do |compare_player|
+      unfinished_players.each do |compare_player|
         if player.position < compare_player.position
           player.rank += 1
         end
       end
     end
-    not_finished_players.sort_by!{|player| player.rank}
+    unfinished_players.sort_by!{|player| player.rank}
   end
 
-  def display_ranking(finished_players, not_finished_players)
+  def display_ranking(finished_players, unfinished_players)
     ii = 0
     while ii < finished_players.size
       puts "#{finished_players[ii].rank}位でゴールしたのは、#{finished_players[ii].name}さんです。"
       ii += 1
     end
     jj = 0
-    while jj < not_finished_players.size
-      puts "現在#{not_finished_players[jj].rank}位は、#{not_finished_players[jj].name}さんです。"
+    while jj < unfinished_players.size
+      puts "現在#{unfinished_players[jj].rank}位は、#{unfinished_players[jj].name}さんです。"
       jj += 1
     end
   end
@@ -132,8 +132,8 @@ until sugoroku.everybody_finished?
   sugoroku.play
   sugoroku.check_each_players_finished
   sugoroku.screening_finished_players
-  ranking.make_finished_player_ranking(sugoroku.finished_players)
-  ranking.make_not_finished_player_ranking(sugoroku.not_finished_players, sugoroku.finished_players.size)
-  ranking.display_ranking(sugoroku.finished_players, sugoroku.not_finished_players)
+  ranking.make_ranking_of_finished_player(sugoroku.finished_players)
+  ranking.make_ranking_of_unfinished_player(sugoroku.unfinished_players, sugoroku.finished_players.size)
+  ranking.display_ranking(sugoroku.finished_players, sugoroku.unfinished_players)
   sugoroku.turn += 1
 end
