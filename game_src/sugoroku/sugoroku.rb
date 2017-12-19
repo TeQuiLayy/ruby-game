@@ -35,7 +35,11 @@ class Sugoroku
         STDIN.getch
         outcome = @dice.roll
         player.position += outcome
-        puts "\n#{outcome}が出ました！ #{player.name}さんは、現在#{player.position}マス目です"
+        if player.position >= 20
+          puts "\n#{outcome}が出ました！ #{player.name}さんは、ゴールしました！"
+        else
+          puts "\n#{outcome}が出ました！ #{player.name}さんは、現在#{player.position}マス目です"
+        end
       end
     end
   end
