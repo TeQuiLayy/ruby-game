@@ -5,7 +5,7 @@ require_relative "./ranking.rb"
 
 sugoroku = Sugoroku.new
 ranking = Ranking.new
-sugoroku.player_count
+sugoroku.count_player
 sugoroku.entry
 until sugoroku.everybody_finished?
   sugoroku.play

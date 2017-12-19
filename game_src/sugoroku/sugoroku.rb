@@ -9,7 +9,7 @@ class Sugoroku
     @turn = 1
   end
 
-  def player_count
+  def count_player
     @players = []
     puts "何人でプレイしますか？"
     loop do
