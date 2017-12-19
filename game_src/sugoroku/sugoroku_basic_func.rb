@@ -1,6 +1,6 @@
 require "io/console"
 
-class Sugoroku
+class SugorokuBasicFunc
   attr_accessor :players
 
   def count_player
