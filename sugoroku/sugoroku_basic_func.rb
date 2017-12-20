@@ -24,7 +24,10 @@ class SugorokuBasicFunc
 
   def play
     @players.each do |player|
-      player.play
+      unless player.finish_flg
+        player.play
+        player.display_result
+      end
     end
   end
 end
