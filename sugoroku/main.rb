@@ -1,10 +1,10 @@
-require_relative "./sugoroku.rb"
+require_relative "./sugoroku_basic_func.rb"
 require_relative "./sugoroku_player.rb"
 require_relative "./dice.rb"
 require_relative "./ranking.rb"
 require_relative "./judge.rb"
 
-sugoroku = Sugoroku.new
+sugoroku = SugorokuBasicFunc.new
 ranking = Ranking.new
 judge = Judge.new
 sugoroku.count_player
