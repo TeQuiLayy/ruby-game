@@ -3,7 +3,7 @@ require "io/console"
 class SugorokuBasicFunc
   attr_accessor :players
 
-  def count_player
+  def count_players
     @players = []
     puts "何人でプレイしますか？"
     loop do
@@ -13,7 +13,7 @@ class SugorokuBasicFunc
     end
   end
 
-  def entry
+  def entry_players
     ii = 1
     while ii <= @num_players
       puts "#{ii}人目の名前を入力してください。"

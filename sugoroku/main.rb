@@ -7,8 +7,8 @@ require_relative "./judge.rb"
 sugoroku = SugorokuBasicFunc.new
 ranking = Ranking.new
 judge = Judge.new
-sugoroku.count_player
-sugoroku.entry
+sugoroku.count_players
+sugoroku.entry_players
 until judge.everybody_finished?(sugoroku.players)
   sugoroku.play
   judge.check_each_players_finished(sugoroku.players)
