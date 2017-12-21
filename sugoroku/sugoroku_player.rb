@@ -33,4 +33,12 @@ class SugorokuPlayer
       @finish_turn = turn
     end
   end
+
+  def get_point
+    if @finish_flg == true
+      @finish_turn
+    else
+      @position
+    end
+  end
 end
