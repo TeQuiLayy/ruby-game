@@ -1,4 +1,5 @@
 require_relative "./player.rb"
+require_relative "./dice.rb"
 
 class SugorokuPlayer < Player
   attr_accessor :position, :finish_turn, :finish_flg, :rank
