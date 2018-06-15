@@ -22,7 +22,7 @@ until judge.everybody_finished?(sugoroku.players)
 
   #ゴールしたプレイヤーとしていないプレイヤーのランキングを算出して表示
   ranking.make_ranking_of_finished_player(judge.finished_players)
-  ranking.make_ranking_of_unfinished_player(judge.unfinished_players, judge.finished_players.size)
+  ranking.make_ranking_of_unfinished_player(judge.unfinished_players)
   ranking.display_ranking(judge.finished_players, judge.unfinished_players)
 
   #ターンを加算
