@@ -9,17 +9,30 @@ class SugorokuRanking < Ranking
     make_descending_ranking(unfinished_players)
   end
 
-  def display_ranking(finished_players, unfinished_players)
+  def display_ranking_all_players(finished_players, unfinished_players)
     puts "\n"
-    ii = 0
-    while ii < finished_players.size
-      puts "#{finished_players[ii].rank}位でゴールしたのは、#{finished_players[ii].name}さんです。"
-      ii += 1
+    display_ranking_finished_players(finished_players)
+    display_ranking_unfinished_players(finished_players.size, unfinished_players)
+  end
+
+  private
+  def display_ranking_finished_players(finished_players)
+    finished_players.each do |player|
+      display_ranking_finished_player(player)
     end
-    jj = 0
-    while jj < unfinished_players.size
-      puts "現在#{unfinished_players[jj].rank + finished_players.size}位は、#{unfinished_players[jj].name}さんです。"
-      jj += 1
+  end
+
+  def display_ranking_finished_player(player)
+    puts "#{player.rank}位でゴールしたのは、#{player.name}さんです。"
+  end
+
+  def display_ranking_unfinished_players(finished_players_num, unfinished_players)
+    unfinished_players.each do |player|
+      display_ranking_finished_player(finished_players_num, player)
     end
+  end
+
+  def display_ranking_finished_player(finished_players_num, player)
+    puts "現在#{player.rank + finished_players_num}位は、#{player.name}さんです。"
   end
 end

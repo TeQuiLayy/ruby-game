@@ -36,7 +36,7 @@ class SugorokuPlayer < Player
     end
   end
 
-  def get_point
+  def get_score
     if @finish_flg == true
       @finish_turn
     else

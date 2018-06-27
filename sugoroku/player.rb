@@ -7,7 +7,7 @@ class Player
     @rank = 0
   end
 
-  def get_point
+  def get_score
     point = 0
   end
 end

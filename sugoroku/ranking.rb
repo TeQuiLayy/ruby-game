@@ -3,7 +3,7 @@ class Ranking
     players.each do |player|
       player.rank = 1
       players.each do |compare_player|
-        if player.get_point > compare_player.get_point
+        if player.get_score > compare_player.get_score
           player.rank += 1
         end
       end
@@ -15,7 +15,7 @@ class Ranking
     players.each do |player|
       player.rank = 1
       players.each do |compare_player|
-        if player.get_point < compare_player.get_point
+        if player.get_score < compare_player.get_score
           player.rank += 1
         end
       end
