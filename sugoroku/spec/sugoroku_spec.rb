@@ -1,5 +1,5 @@
 require "spec_helper"
-require_relative "../sugoroku_basic_func"
+require_relative "../sugoroku_players_management"
 require_relative "../sugoroku_ranking"
 require_relative "../sugoroku_player"
 
