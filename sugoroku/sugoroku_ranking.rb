@@ -28,11 +28,11 @@ class SugorokuRanking < Ranking
 
   def display_ranking_unfinished_players(finished_players_num, unfinished_players)
     unfinished_players.each do |player|
-      display_ranking_finished_player(finished_players_num, player)
+      display_ranking_unfinished_player(finished_players_num, player)
     end
   end
 
-  def display_ranking_finished_player(finished_players_num, player)
+  def display_ranking_unfinished_player(finished_players_num, player)
     puts "現在#{player.rank + finished_players_num}位は、#{player.name}さんです。"
   end
 end

@@ -14,7 +14,7 @@ class SugorokuBasicFunc
   end
 
   def entry_players
-    @players.each_with_index do |player, ii|
+    @players.each_index do |ii|
       puts "#{ii+1}人目の名前を入力してください。"
       @players[ii] = SugorokuPlayer.new(gets.chomp)
     end
